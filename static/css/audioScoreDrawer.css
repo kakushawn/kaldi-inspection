@@ -1,0 +1,13 @@
+.audioScoreDrawer {
+  position: relative;
+  margin-top: 20px;
+  width: 70%;
+}
+
+.audioScoreDrawer > .audioScoreDrawer_result, .audioScoreDrawer > .audioScoreDrawer_clickedResult {
+  width: 100%;
+  height: 300px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
