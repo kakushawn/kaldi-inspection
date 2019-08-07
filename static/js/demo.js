@@ -60,6 +60,8 @@ function startRecording() {
   });
 }
 
+
+
 function stopRecording() {
   if (recorder) {
     console.log("stopRecording");
@@ -84,6 +86,15 @@ function stopRecording() {
         au.src = url;
         $('#audio_show').append(au);
         blob = blob_;
+        const date_time = new Date;
+        const timestamp = date_time.getFullYear().toString() + 
+                          (date_time.getMonth() + 1).toString() + 
+                          date_time.getDate().toString() +  
+                          date_time.getHours().toString() + 
+                          date_time.getMinutes().toString() + 
+                          date_time.getSeconds().toString();
+
+        $('#audio_show').append(`<br/><a href="${url}" download="demo_${timestamp}" > download WAV </a><br/>`);
       }
     });
 
@@ -116,6 +127,7 @@ wav_file_uploader.addEventListener('change', (e) => {
     au.src = url;
     $('#audio_show').append(au);
     blob = choose_wav_file;
+    // $('#audio_show').append(`<br/><a href="${url}" download="demo" > download WAV </a><br/>`);
   }
   choose_wav_file_ready = true;
 });
@@ -142,9 +154,6 @@ function uploadClick() {
       $('#downloadButton').prop('disabled', false);
       $('#result').text(result.message);
       console.log(result);
-      // let data = "./uploads/test_utt.json";
-      let audioData = "./uploads/demo_16k.wav";
-      $('#result').append(`<br/><a href="${audioData}" download="demo" > download WAV(16k) </a><br/>`);
       if (recorder){
         recorder.clear();
       }
