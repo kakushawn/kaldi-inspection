@@ -106,10 +106,8 @@ var Recorder = exports.Recorder = (function () {
             }
 
             function record(inputBuffer) {
-                console.log("record");
                 for (var channel = 0; channel < numChannels; channel++) {
                     recBuffers[channel].push(inputBuffer[channel]);
-                    console.log("record for");
                 }
                 recLength += inputBuffer[0].length;
             }

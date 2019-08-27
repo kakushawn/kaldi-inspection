@@ -1,0 +1,5 @@
+ROOT_FOLDER = '/home/kaldi/foxconn-asr/web_demo'
+STATIC_FOLDER = '/home/kaldi/foxconn-asr/web_demo/static'
+UPLOAD_FOLDER = '/home/kaldi/foxconn-asr/web_demo/static/uploads'
+RUN_FOLDER = '/home/kaldi/foxconn-asr/decode_demo'
+DEMO_FOLDER = '/home/kaldi/foxconn-asr/decode_demo/local/demo'

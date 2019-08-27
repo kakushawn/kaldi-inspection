@@ -1,2 +1,0 @@
-test_utt 劉 女 後 就 會 只有 那邊 教育 下 一 案 法院 核准 
-LOG (nnet3-latgen-faster[5.5.275~44-be019]:DecodeUtteranceLatticeFaster():decoder-wrappers.cc:289) Log-like per frame for utterance test_utt is 0.935045 over 432 frames.

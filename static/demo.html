@@ -7,8 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <title>語音辨識 Demo 系統</title>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+  <title>富士康語音命令 Demo 系統</title>
+  <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"> -->
+  <link href="./css/bootstrap.min.css" rel="stylesheet">
   <link href="./css/style.css" rel="stylesheet">
   <link href="./css/audioScoreDrawer.css" rel="stylesheet">
 </head>
@@ -17,7 +18,7 @@
   <header>
     <!-- Fixed navbar -->
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <a class="navbar-brand" href="./demo.html">中文語音辨識</a>
+      <a class="navbar-brand" href="./demo.html">富士康語音命令</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
         aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -28,38 +29,37 @@
     </nav>
   </header>
   <main role="main" class="container">
-    <canvas id="canvas" width="1024" height="250" style="display: none;"> </canvas>
     <form>
       <div class="form-group">
         <label for="sequence"></label>
-        <!-- <input class="form-control" id="sequence" type="text" name="Text" placeholder="請輸入想說的文字"> -->
       </div>
       <div class="button">
-        <button id="recordButton" type="button" class="btn btn-success" onclick="startRecording();">開始錄音</button>
-        <button id="stopButton" type="button" class="btn btn-success" onclick="stopRecording();">停止錄音</button>
-        <!-- <div id="choose_file" class="btn btn-success">
-          <button class="btn btn-success">選擇音檔</button>
-          <input type="file" name="choose_file" />
-        </div> -->
+        <button id="recordButton" type="button" class="btn btn-success"  onmousedown="startRecording();" onmouseup="stopAndUpload();" ontouchstart="startRecording();" ontouchend="stopAndUpload();">開始錄音</button>
         <label for="choose_wav_file" class="btn btn-success">選擇音檔</label>
-        <!-- <label for="choose_txt_file" class="btn btn-success">選擇文字檔</label> -->
 
-        <!-- <input id="choose_file" type="file" name="choose_file" accept=".wav"/> -->
         <button id="uploadButton" type="button" class="btn btn-primary" onclick="uploadClick();" disabled>開始辨識</button>
-
         <input id="choose_wav_file" style="visibility:hidden;" type="file" accept=".wav">
-        <input id="choose_txt_file" style="visibility:hidden;" type="file" accept=".txt">
       </div>
-      
+      <div id="commandType" style="padding: 20px 0 0 0 ">
+        <input type="radio" name="command" value="sg" checked> 生管戰情APP
+        <input type="radio" name="command" value="zg"> 治具開發APP
+        <input type="radio" name="command" value="zg_noall"> 治具開發APP (2)
+        <input type="radio" name="command" value="pz"> 品質快易通-CPK分析APP
+        <input type="radio" name="command" value="yn_ch"> 確認/取消
+        <input type="radio" name="command" value="yn_en"> yes/no
+        <input type="radio" name="command" value="cmd_type"> APP選單(生管戰情app/治具開發/品質快易通)
+      </div>
     </form>
+	
+	<canvas id="canvas" width="1024" height="250" style="display: none;"> </canvas>
+	
     <div id="audio_show" style="text-align:center;"> <br /> </div>
      <pre id="result" display="None;"></pre>
     <div id="readme">
       <li>僅支援Google Chrome</li>
       <li>按下「開始錄音」按鈕即可開始錄音</li>
-      <li>錄完按下「停止錄音」錄音時間最長可為20秒</li>
-      <li>可以試聽錄音結果，欲重錄可再次按下「開始錄音」按鈕</li>
-      <li>按下「開始辨識」即可上傳錄音結果，等待回傳辨識結果</li>
+      <li>放開即可停止錄音並上傳音檔辨識</li>
+      <li>錄音時間最長可為5秒</li>
     </div>
     
   </main>
@@ -69,14 +69,16 @@
       <span class="span-center">Copyright © 2019 A.S. 保留一切權利。</p>
     </div>
   </footer>
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script> -->
+  <script src="./js/jquery-3.2.1.min.js"></script>
+  <script src="./js/bootstrap.min.js"></script>
+  <script src="./js/wavesurfer.min.js"></script>
   <script src="./js/utility.js"></script>
-  <!-- <script src="./js/recorder.js"></script> -->
-  <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+  <script src="./js/recorder.js"></script>
+  <!-- <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script> -->
   <script src="./js/recorder_gui.js"></script>
-  <script src="./js/audioScoreDrawer.js"></script>
   <script src="./js/demo.js"></script>
 </body>
 
