@@ -157,8 +157,7 @@ function uploadClick() {
       contentType: false
     }).done(function (result) {
       $('#downloadButton').prop('disabled', false);
-      $('#result').text(result.message);
-      console.log(result);
+      $('#result').text(result.data.message);
       if (recorder){
         recorder.clear();
       }
