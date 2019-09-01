@@ -18,6 +18,8 @@ def main_portal():
 
 # check decoding pass threshold
 def _challengeThreshold(command_type, command, loglike):
+    if (command_type == 'test_yn_en' or command_type == 'test_yn_ch'):
+        return True;
     command_thresholds = commands.commands['command']
     command = HanziConv.toSimplified(command)
     print ('decoded command:' + command)
