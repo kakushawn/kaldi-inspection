@@ -50,20 +50,30 @@
         <input type="radio" name="command" value="cmd_type"> APP選單(生管戰情app/治具開發/品質快易通)
       </div>
     </form>
-	
+
 	<canvas id="canvas" width="1024" height="250" style="display: none;"> </canvas>
-	
+
     <div id="audio_show" style="text-align:center;"> <br /> </div>
-     <pre id="result" display="None;"></pre>
+    <pre id="result" display="None;"></pre>
     <div id="readme">
       <li>僅支援Google Chrome</li>
       <li>按下「開始錄音」按鈕即可開始錄音</li>
       <li>放開即可停止錄音並上傳音檔辨識</li>
       <li>錄音時間最長可為5秒</li>
     </div>
-    
+
+    <!-- The Modal -->
+    <div id="confirmModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="confirm_question" > </br> </div>
+        <div id="confirm_timer" > </br> </div>
+      </div>
+    </div>
+
   </main>
-  
+
   <footer class="footer">
     <div class="container" style="text-align:center;">
       <span class="span-center">Copyright © 2019 A.S. 保留一切權利。</p>
