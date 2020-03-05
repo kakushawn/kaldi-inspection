@@ -5,4 +5,6 @@ UPLOAD_FOLDER = ROOT_FOLDER + '/static/uploads'
 # kaldi
 RUN_FOLDER = '/home/kaldi/foxconn-asr/decode_demo'
 DEMO_FOLDER = '/home/kaldi/foxconn-asr/decode_demo/local/demo'
-EXP_FOLDER = '.'
+DECODE_FOLDER = './kaldi/decodes/'
+DATA_FOLDER = './kaldi/data/'
+CORPUS_FOLDER = '/mnt/hdd18.2t/dataset'

@@ -1,6 +1,6 @@
 from . import main
 from flask import request, jsonify, redirect
-# from flask import send_from_directory, current_app
+from flask import send_from_directory  # , current_app
 # import time
 # import uuid
 # from hanziconv import HanziConv
@@ -14,14 +14,22 @@ def main_portal():
     return redirect('/static/demo.html', code=302)
 
 
-@main.route('/kaldi/show', methods=['GET'])
-def fetch():
+# @main.route('/dataset/<path>')
+# def resource(path):
+#     print("!!!!!!!!!!!!!!!!!!!!!!!! " + path)
+#     return send_from_directory('dataset', path)
+
+
+@main.route('/kaldi/list', methods=['GET'])
+def listResult():
     param = {
-        'expid': request.args.get('expid'),
+        'decode_id': request.args.get('decode_id'),
+        'data': request.args.get('data'),
         'criterion': request.args.get('criterion', 'wer'),
         'sort': request.args.get('sort', default='des')
     }
-    if param['expid'] is None \
+    if param['decode_id'] is None \
+            or param['data'] is None \
             or param['sort'] not in ['des', 'asc']\
             or param['criterion'] not in ['wer', 'cer']:
         return jsonify(
@@ -29,10 +37,10 @@ def fetch():
             message="invalid params",
             content=None
         )
-    content = kaldi.showExp(param)
+    content = kaldi.showDecode(param)
     if content is None:
         success = False
-        message = "Exp does not exist"
+        message = "decode id or data does not exist"
     else:
         success = True
         message = ""
