@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>發音評分 Demo 系統</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-custom.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/all.css" rel="stylesheet">
+    <link href="/static/css/audioScoreDrawer.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <main role="main" class="container">
+        <canvas id="canvas" width="1024" height="250" style="display: none;"> </canvas>
+
+        <div id=resultDiv />
+        <div id=resultDiv2 />
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
+    <script src="/static/js/utility.js"></script>
+    <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+    <script src="/static/js/recorder_gui.js"></script>
+    <script src="/static/js/audioScoreDrawer.js"></script>
+    <script src="/static/js/jsonViewer.js"></script>
+    <script src="/static/js/demo.js"></script>
+
+
+</body>
+
+</html>
+
+<!-- <title>Hello from Flask</title>
+
+<form action="/kaldi/detail" method="post" id="default" enctype="multipart/form-data">
+    uttid: <input type="text" name="uttid" id="uttid" /><br>
+    wav.scp: <input type="file" label="wav.scp" name="wavscp" /><br>
+    ctm1: <input type="file" label="ctm1" name="ctm1" /><br>
+    ctm2: <input type="file" name="ctm2" /><br>
+    ctm2: <input type="file" name="ctm3" /><br>
+    <input type="submit" value="submit" name="submit" />
+</form> -->

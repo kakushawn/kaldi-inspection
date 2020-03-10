@@ -1,0 +1,118 @@
+.form-control {
+    display: inline;
+    width: 70%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: #525252;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #fff;
+    vertical-align: middle;
+    border-radius: 0rem;
+    border-top-left-radius: .5rem;
+    border-bottom-left-radius: .5rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+
+}
+
+.form-control::-ms-expand {
+    background-color: transparent;
+    border: 0
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    /* border-color: #80bdff; */
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25)
+}
+
+label {
+    display: inline-block;
+    margin-bottom: .0;
+}
+
+#uploadButton {
+    width: 20%;
+    position: absolute;
+    font-weight: 400;
+    text-align: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    border: 1px solid transparent;
+    padding: .35rem 1rem;
+    line-height: 1.5rem;
+    border-radius: 0;
+    border-top-right-radius: .5rem;
+    border-bottom-right-radius: .5rem;
+    background-color: #15668C;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
+}
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    font-size: 18px;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .9rem 1.2rem;
+    line-height: normal;
+    border-radius: .6rem;
+    background-color: #15668C;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
+}
+
+.btnn {
+
+    display: inline-block;
+    font-weight: 400;
+    font-size: 16px;
+    text-align: center;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .9rem 1.2rem;
+    line-height: normal;
+    border-radius: .6rem;
+    background-color: #15668C;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
+}
+
+.btn:focus,
+.btn:hover {
+    text-decoration: none
+}
+
+.btn.focus,
+.btn:focus {
+    outline: 0;
+    /* box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25) */
+}
+
+.btn.disabled,
+.btn:disabled {
+    opacity: .65
+}
+
+.brand {
+    display: inline-block;
+    font-size: 2.5rem;
+    white-space: nowrap;
+    color: #0A1747;
+    font-weight: 800;
+}

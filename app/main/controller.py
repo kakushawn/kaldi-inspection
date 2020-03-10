@@ -1,6 +1,7 @@
 from . import main
 from flask import request, jsonify, redirect
 from flask import send_from_directory  # , current_app
+from flask import render_template
 # import time
 # import uuid
 # from hanziconv import HanziConv
@@ -50,3 +51,38 @@ def listResult():
         content=content
     )
     # return "---------------------"
+
+
+def _validateDetailParam():
+    uttid = request.values.get('uttid')
+    wav_reqsource = request.values.get('wav_resource')
+    if uttid == None:
+        return "uttid is empty"
+    if wav_reqsource == None:
+        return "wav_resource is empty"
+    if request.files('ctm1') == None:
+        return "no any ctm there"
+    ctms = [request.files('ctm1')]
+    if request.files('ctm2') == None:
+        ctms.append(request.files('ctm2'))
+    if request.files('ctm3') == None:
+        ctms.append(request.files('ctm3'))
+    return {
+        'uttid': uttid,
+        'wav_resource': wav_reqsource,
+        'ctms': ctms
+    }
+
+
+@main.route('/kaldi/detail', methods=['GET', 'POST'])
+def detail():
+    if request.method == 'POST':
+        param = _validateDetailParam()
+        if type(param) == str:
+            return jsonify(
+                success=False,
+                message=param,
+                content=None
+            )
+    else:
+        return render_template('detail/index.html')
