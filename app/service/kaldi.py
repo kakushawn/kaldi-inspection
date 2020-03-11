@@ -1,6 +1,7 @@
-
 from flask import current_app as app
 import os
+import sys
+import json
 
 
 def _getAudioPosInScp(line0):
@@ -31,7 +32,7 @@ def _getWer(csid):
     return errs/occs
 
 
-def run(param):
+def showDecode(param):
     content = {'per_utt': {}, 'wav': {}}
     if param['decode_id'] in os.listdir(app.config['DECODE_FOLDER']):
         per_utt = app.config['DECODE_FOLDER']+'/'+param['decode_id'] + \
@@ -75,3 +76,45 @@ def run(param):
         return None
 
     return content
+
+
+def fetchCtm(param):
+    # get mir ctm
+    expdir = app.config['DECODE_FOLDER']
+    decode_dir = expdir+"/decode_"+param['decode_id']
+    mir_ctm_file = decode_dir + "/mir/"+param['uttid']+'.json'
+    if not os.path.exists(mir_ctm_file):
+        return {}
+    with open(mir_ctm_file, encoding="utf8") as fp:
+        ctm = json.load(fp)
+
+    # get corpus name
+    corpus_file = decode_dir+"/corpus"
+    with open(corpus_file) as fp:
+        lines = fp.read().splitlines()
+    if len(lines) != 1:
+        return {}
+    corpus = lines[0]
+
+    # get wav path
+    wavscp = decode_dir + "/data/wav.scp"
+    if not os.path.exists(wavscp):
+        return {}
+    with open(wavscp) as fp:
+        lines = fp.read().splitlines()
+    wav_relative_path = ""
+    for line in lines:
+        tokens = line.split()
+        if tokens[0] == param['uttid']:
+            audio_file_pos = _getAudioPosInScp(line)
+            if audio_file_pos == -1:
+                return {}
+            wav_relative_path = "/static/dataset/" + corpus + \
+                tokens[audio_file_pos].split(corpus)[1]
+    if wav_relative_path == "":
+        return {}
+
+    return {
+        'wav': wav_relative_path,
+        'ctm': ctm
+    }

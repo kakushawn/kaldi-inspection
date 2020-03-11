@@ -25,6 +25,7 @@ class AudioScoreDrawer {
     this.idSel.addClass("audioScoreDrawer");
     this.idSel.append("<div class=\"audioScoreDrawer_utt\"> <h4 id=\"uttid\">uttid</h4> </div>");
     this.idSel.append("<div class=\"audioScoreDrawer_title\"> <p id=\"text\">text</p> </div>");
+    this.idSel.append("<audio controls><source src=" + audioData + "></audio>");
     this.idSel.append("<canvas class=\"audioScoreDrawer_result\"></canvas>");
     this.idSel.append("<canvas class=\"audioScoreDrawer_clickedResult\"></canvas>");
 

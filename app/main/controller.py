@@ -7,16 +7,10 @@ from ..service import kaldi
 
 @main.route('/', methods=['GET'])
 def main_portal():
-    return redirect('/static/demo.html', code=302)
+    return redirect('/kaldi/list', code=302)
 
 
-# @main.route('/dataset/<path>')
-# def resource(path):
-#     print("!!!!!!!!!!!!!!!!!!!!!!!! " + path)
-#     return send_from_directory('dataset', path)
-
-
-@main.route('/kaldi/list', methods=['GET'])
+@main.route('/list', methods=['GET'])
 def listResult():
     param = {
         'decode_id': request.args.get('decode_id'),
@@ -47,36 +41,31 @@ def listResult():
     )
 
 
+@main.route('/ctm/', methods=['GET'])
+def ctm():
+    return render_template('ctm/index.html')
+
+
 def _validateDetailParam():
-    uttid = request.values.get('uttid')
-    wav_reqsource = request.values.get('wav_resource')
+    decode_id = request.args.get('decode_id')
+    uttid = request.args.get('uttid')
     if uttid == None:
         return "uttid is empty"
-    if wav_reqsource == None:
-        return "wav_resource is empty"
-    if request.files('ctm1') == None:
-        return "no any ctm there"
-    ctms = [request.files('ctm1')]
-    if request.files('ctm2') == None:
-        ctms.append(request.files('ctm2'))
-    if request.files('ctm3') == None:
-        ctms.append(request.files('ctm3'))
+    if decode_id == None:
+        return "decode_id is empty"
     return {
         'uttid': uttid,
-        'wav_resource': wav_reqsource,
-        'ctms': ctms
+        'decode_id': decode_id
     }
 
 
-@main.route('/kaldi/detail', methods=['GET', 'POST'])
-def detail():
-    if request.method == 'POST':
-        param = _validateDetailParam()
-        if type(param) == str:
-            return jsonify(
-                success=False,
-                message=param,
-                content=None
-            )
-    else:
-        return render_template('detail/index.html')
+@main.route('/ctm/fetch', methods=['GET'])
+def fetchCtm():
+    param = _validateDetailParam()
+    if type(param) == str:
+        return jsonify(
+            success=False,
+            message=param,
+            content=None
+        )
+    return jsonify(kaldi.fetchCtm(param))
