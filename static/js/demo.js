@@ -7,15 +7,12 @@ var command_type = "";
 var decoded_command;
 
 window.onload = function init() {
-
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
   window.URL = window.URL || window.webkitURL;
   if (!navigator.getUserMedia) {
     alert('navigator.getUserMedia not present!')
   }
-  audioContext = new AudioContext;
-  canvas = document.getElementById('canvas');
 
   // draw score figure
   let waveColors = ["#0A1747", "#46ECC8", "#FDF289"];
