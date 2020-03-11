@@ -23,6 +23,8 @@ class AudioScoreDrawer {
     // Create canvas for drawing and intersection
     this.idSel = $(`#${this.id}`);
     this.idSel.addClass("audioScoreDrawer");
+    this.idSel.append("<div class=\"audioScoreDrawer_utt\"> <h4 id=\"uttid\">uttid</h4> </div>");
+    this.idSel.append("<div class=\"audioScoreDrawer_title\"> <p id=\"text\">text</p> </div>");
     this.idSel.append("<canvas class=\"audioScoreDrawer_result\"></canvas>");
     this.idSel.append("<canvas class=\"audioScoreDrawer_clickedResult\"></canvas>");
 
@@ -49,6 +51,8 @@ class AudioScoreDrawer {
       this.data = this.getDataFromUrl(this.dataUrl);
     }
     this.scoreData = this.getScoreData(this.data);
+    this.idSel.find("h4")[0].innerHTML = this.data.Utterance;
+    this.idSel.find("p")[0].innerHTML = this.data.text;
 
     // Get audio data
     // Support URL
@@ -421,11 +425,11 @@ class AudioScoreDrawer {
       textWidth = this.ctx.measureText(text).width;
       textX = blkX + blkWidth / 2 - textWidth / 2;
       this.ctx.fillText(text, textX, this.scoreWordNameBaseY);
-      // Score of word
-      text = parseInt(word.timberScore).toString();
-      textWidth = this.ctx.measureText(text).width;
-      textX = blkX + blkWidth / 2 - textWidth / 2;
-      this.ctx.fillText(text, textX, this.scoreWordScoreBaseY);
+      // // Score of word
+      // text = parseInt(word.timberScore).toString();
+      // textWidth = this.ctx.measureText(text).width;
+      // textX = blkX + blkWidth / 2 - textWidth / 2;
+      // this.ctx.fillText(text, textX, this.scoreWordScoreBaseY);
 
       // Phones of word
       phones.forEach(phone => {
@@ -437,18 +441,18 @@ class AudioScoreDrawer {
           this.stroke(x, blkY, x, blkY + blkHeight, this.scorePhoneBlockLineWidth);
         });
 
-        let phoneTextMidX = this.scoreBaseX + ((time[0] + time[1]) / 2) * this.sampleRate * this.xUnitLength;
-        // Name
-        text = phone.name;
-        textWidth = this.ctx.measureText(text).width;
-        textX = phoneTextMidX - textWidth / 2;
-        this.ctx.fillText(text, textX, this.scorePhoneNameBaseY);
+        // let phoneTextMidX = this.scoreBaseX + ((time[0] + time[1]) / 2) * this.sampleRate * this.xUnitLength;
+        // // Name
+        // text = phone.name;
+        // textWidth = this.ctx.measureText(text).width;
+        // textX = phoneTextMidX - textWidth / 2;
+        // this.ctx.fillText(text, textX, this.scorePhoneNameBaseY);
 
-        // Score
-        text = parseInt(phone.timberScore).toString();
-        textWidth = this.ctx.measureText(text).width;
-        textX = phoneTextMidX - textWidth / 2;
-        this.ctx.fillText(text, textX, this.scorePhoneScoreBaseY);
+        // // Score
+        // text = parseInt(phone.timberScore).toString();
+        // textWidth = this.ctx.measureText(text).width;
+        // textX = phoneTextMidX - textWidth / 2;
+        // this.ctx.fillText(text, textX, this.scorePhoneScoreBaseY);
       });
     }
 

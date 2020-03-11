@@ -1,13 +1,8 @@
 from . import main
 from flask import request, jsonify, redirect
-from flask import send_from_directory  # , current_app
+from flask import send_from_directory
 from flask import render_template
-# import time
-# import uuid
-# from hanziconv import HanziConv
-# from . import log_class
 from ..service import kaldi
-# import os
 
 
 @main.route('/', methods=['GET'])
@@ -50,7 +45,6 @@ def listResult():
         message=message,
         content=content
     )
-    # return "---------------------"
 
 
 def _validateDetailParam():
