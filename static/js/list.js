@@ -21,18 +21,22 @@ window.onload = function init() {
 $('#list-fetch-form').on('submit', function (event) {
   event.preventDefault();
   var data = $('#list-fetch-form :input').serializeArray();
+  decode_id = data.find(function (element) { return element["name"] == 'decode-options' }).value;
+  criterion = data.find(function (element) { return element["name"] == 'criterion' }).value;
 
   $.ajax({
     url: '/list/fetch',
     method: "GET",
     data: {
-      decode_id: data.find(function (element) { return element["name"] == 'decode-options' }).value,
-      criterion: data.find(function (element) { return element["name"] == 'criterion' }).value,
+      decode_id: decode_id,
+      criterion: criterion
     },
   }).done(data => {
     if (data.success) {
       utts = data.content.utts
       utts = getSortedObjectKeys(utts);
+      $("#listInfo").html("");
+      $("#listInfo").prepend("<h3> result of " + decode_id + " (overall WER: " + data.content.wer + ")</h4>");
       $("#listWrapper").html("");
       utts.forEach(key => {
         $("#listWrapper").prepend("<div class=list-item id=\"" + key + "\"></div>");

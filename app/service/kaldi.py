@@ -38,8 +38,9 @@ def showDecode(param):
     content = {'utts': {}}
     decode_dir = param['decode_id']
     if decode_dir in os.listdir(app.config['DECODES_FOLDER']):
-        per_utt = app.config['DECODES_FOLDER'] + "/" + decode_dir + \
-            '/scoring_kaldi/'+param['criterion']+'_details/per_utt'
+        scoring_dir = app.config['DECODES_FOLDER'] + "/" + decode_dir + \
+            '/scoring_kaldi/'
+        per_utt = scoring_dir + param['criterion'] + '_details' + '/per_utt'
 
         # read per utt
         count = 0
@@ -58,6 +59,16 @@ def showDecode(param):
             else:
                 content['utts'][tokens[0]][tokens[1]] = tokens[2:]
             count += 1
+
+        # read overall wer
+        wer_file = scoring_dir + "/best_" + param['criterion'].lower()
+        if not os.path.exists(wer_file):
+            return {}
+        with open(wer_file) as fp:
+            lines = fp.read().splitlines()
+        tokens = lines[0].split()
+        content['wer'] = tokens[1]
+
     else:
         return None
 

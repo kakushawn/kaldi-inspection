@@ -20,10 +20,10 @@
     <main role="main" class="container">
         <canvas id="canvas" width="1024" height="250" style="display: none;"> </canvas>
         <div id=listTitle>
-            <h3> List result </h3>
+            <h2> List result </h2>
         </div>
 
-        <div>
+        <div id=list-form>
             <form action="/list/fetch" method="get" id="list-fetch-form" enctype="multipart/form-data">
                 <div>
                     <label for="decode-options">decode results: </label>
@@ -43,7 +43,8 @@
                 <input type="submit" value="submit" name="submit" />
             </form>
         </div>
-
+        <hr>
+        <div id=listInfo></div>
         <div id=listWrapper></div>
     </main>
 

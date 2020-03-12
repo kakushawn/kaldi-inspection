@@ -2,7 +2,11 @@
   width: 100%;
 }
 
+#listInfo {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 .list-item {
-  margin-top: 40px;
-  padding-top:  10px;
+  padding-bottom:  30px;
 }
