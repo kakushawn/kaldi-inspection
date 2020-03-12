@@ -1,10 +1,5 @@
-var blob, blob_confirm, gumStream, au_show_flag = false;
-var record_count = 0;
-var canvas, recorder, recorder_confirm, recorderGUI, audioContext;
-var stop_rec_timer, draw_timer;
+var audioContext;
 var drawer = null;
-var command_type = "";
-var decoded_command;
 
 window.onload = function init() {
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -38,13 +33,14 @@ window.onload = function init() {
       },
       async: false,
     }).done(data => {
-      mir_result = data;
-      if (mir_result != null) {
+      if (data.success) {
+        mir_result = data['content'];
         if (drawer === null) {
           drawer = new AudioScoreDrawer("resultDiv", mir_result['wav'], mir_result['ctm'], waveColors, scoreColors);
         } else {
           drawer.setData(mir_result['wav'], mir_result['ctm']);
         }
+        $(document).attr('title', "CTM (" + mir_result['ctm'].Utterance + ")");
       }
     });
   }

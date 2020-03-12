@@ -15,27 +15,30 @@ def _getAudioPosInScp(line0):
 
 
 def _checkConsistency(content):
-    if len(content['per_utt']) != len(content['wav']):
+    if len(content['utts']) != len(content['wav']):
         return False
-    for utt in content['per_utt']:
+    for utt in content['utts']:
         if utt not in content['wav']:
             return False
     for utt in content['wav']:
-        if utt not in content['per_utt']:
+        if utt not in content['utts']:
             return False
     return True
 
 
 def _getWer(csid):
-    occs = sum([float(t) for t in csid])
-    errs = sum([float(t) for t in csid[1:]])
+    errs = float(csid[1]) + float(csid[2]) + float(csid[3])
+    occs = float(csid[0]) + float(csid[1]) + float(csid[3])
+    if occs == 0.0:
+        return 0
     return errs/occs
 
 
 def showDecode(param):
-    content = {'per_utt': {}, 'wav': {}}
-    if param['decode_id'] in os.listdir(app.config['DECODE_FOLDER']):
-        per_utt = app.config['DECODE_FOLDER']+'/'+param['decode_id'] + \
+    content = {'utts': {}}
+    decode_dir = param['decode_id']
+    if decode_dir in os.listdir(app.config['DECODES_FOLDER']):
+        per_utt = app.config['DECODES_FOLDER'] + "/" + decode_dir + \
             '/scoring_kaldi/'+param['criterion']+'_details/per_utt'
 
         # read per utt
@@ -45,34 +48,17 @@ def showDecode(param):
         for line in lines:
             tokens = line.split()
             if count == 0:
-                content['per_utt'][tokens[0]] = {}
-            content['per_utt'][tokens[0]][tokens[1]] = tokens[2:]
+                content['utts'][tokens[0]] = {}
             if count == 3:
-                content['per_utt'][tokens[0]]['wer'] = _getWer(tokens[2:])
+                content['utts'][tokens[0]]["csid"] = tokens[2:]
+                content['utts'][tokens[0]]['wer'] = _getWer(tokens[2:])
+                content['utts'][tokens[0]]['ctm_link'] = "/ctm/?decode_id=" + \
+                    param['decode_id']+"&uttid="+tokens[0]
                 count = -1
+            else:
+                content['utts'][tokens[0]][tokens[1]] = tokens[2:]
             count += 1
     else:
-        return None
-
-    if param['data'] in os.listdir(app.config['DATA_FOLDER']):
-        corpus_dir_depth = len(
-            app.config['CORPUS_FOLDER'].strip('/').split('/'))
-        wavscp = app.config['DATA_FOLDER']+'/'+param['data'] + '/wav.scp'
-        with open(wavscp) as fp:
-            lines = fp.read().splitlines()
-        audio_file_pos = _getAudioPosInScp(lines[0])
-        if audio_file_pos == -1:
-            return None
-
-        for line in lines:
-            tokens = line.split()
-            content['wav'][tokens[0]] = "/static/" + \
-                "/".join(tokens[audio_file_pos].split('/')[corpus_dir_depth:])
-
-    else:
-        return None
-
-    if not _checkConsistency(content):
         return None
 
     return content
@@ -80,8 +66,8 @@ def showDecode(param):
 
 def fetchCtm(param):
     # get mir ctm
-    expdir = app.config['DECODE_FOLDER']
-    decode_dir = expdir+"/decode_"+param['decode_id']
+    expdir = app.config['DECODES_FOLDER']
+    decode_dir = expdir+"/"+param['decode_id']
     mir_ctm_file = decode_dir + "/mir/"+param['uttid']+'.json'
     if not os.path.exists(mir_ctm_file):
         return {}
@@ -109,8 +95,12 @@ def fetchCtm(param):
             audio_file_pos = _getAudioPosInScp(line)
             if audio_file_pos == -1:
                 return {}
-            wav_relative_path = "/static/dataset/" + corpus + \
-                tokens[audio_file_pos].split(corpus)[1]
+            wav_tokens = tokens[audio_file_pos].split("/"+corpus+"/")
+            if len(wav_tokens) != 2:
+                return {}
+            wav_relative_path = "/static/dataset/" + \
+                corpus + "/" + wav_tokens[1]
+    # utt not found
     if wav_relative_path == "":
         return {}
 
@@ -118,3 +108,7 @@ def fetchCtm(param):
         'wav': wav_relative_path,
         'ctm': ctm
     }
+
+
+def getDecodes():
+    return os.listdir(app.config['DECODES_FOLDER'])

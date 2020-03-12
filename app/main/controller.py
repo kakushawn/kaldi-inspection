@@ -7,19 +7,22 @@ from ..service import kaldi
 
 @main.route('/', methods=['GET'])
 def main_portal():
-    return redirect('/kaldi/list', code=302)
+    return redirect('/list', code=302)
 
 
 @main.route('/list', methods=['GET'])
-def listResult():
+def showList():
+    return render_template('list/index.html', decode_results=kaldi.getDecodes())
+
+
+@main.route('/list/fetch', methods=['GET'])
+def fetchList():
     param = {
         'decode_id': request.args.get('decode_id'),
-        'data': request.args.get('data'),
         'criterion': request.args.get('criterion', 'wer'),
         'sort': request.args.get('sort', default='des')
     }
     if param['decode_id'] is None \
-            or param['data'] is None \
             or param['sort'] not in ['des', 'asc']\
             or param['criterion'] not in ['wer', 'cer']:
         return jsonify(
@@ -68,4 +71,16 @@ def fetchCtm():
             message=param,
             content=None
         )
-    return jsonify(kaldi.fetchCtm(param))
+    content = kaldi.fetchCtm(param)
+    if not content:
+        return jsonify(
+            success=False,
+            message="fetch utt ctm fail",
+            content=None
+        )
+
+    return jsonify(
+        success=True,
+        message="",
+        content=kaldi.fetchCtm(param)
+    )

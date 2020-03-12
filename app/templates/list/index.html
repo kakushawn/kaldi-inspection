@@ -7,19 +7,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title> CTM </title>
+    <title> List </title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/bootstrap-custom.css" rel="stylesheet">
     <link href="/static/css/style.css" rel="stylesheet">
     <link href="/static/css/all.css" rel="stylesheet">
-    <link href="/static/css/audioScoreDrawer.css" rel="stylesheet">
+    <link href="/static/css/list.css" rel="stylesheet">
 
 </head>
 
 <body>
     <main role="main" class="container">
         <canvas id="canvas" width="1024" height="250" style="display: none;"> </canvas>
-        <div id=resultDiv></div>
+        <div id=listTitle>
+            <h3> List result </h3>
+        </div>
+
+        <div>
+            <form action="/list/fetch" method="get" id="list-fetch-form" enctype="multipart/form-data">
+                <div>
+                    <label for="decode-options">decode results: </label>
+                    <select id="decode-options" name="decode-options">
+                        {%  for decode in decode_results  %}
+                        <option value="{{decode}}">{{decode}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="criterion"> criterion: </label>
+                    <select id="er-options" name="criterion">
+                        <option value="wer">wer</option>
+                        <option value="cer">cer</option>
+                    </select>
+                </div>
+                <input type="submit" value="submit" name="submit" />
+            </form>
+        </div>
+
+        <div id=listWrapper></div>
     </main>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -29,9 +54,8 @@
     <script src="/static/js/utility.js"></script>
     <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
     <script src="/static/js/recorder_gui.js"></script>
-    <script src="/static/js/audioScoreDrawer.js"></script>
     <script src="/static/js/jsonViewer.js"></script>
-    <script src="/static/js/ctm.js"></script>
+    <script src="/static/js/list.js"></script>
 </body>
 
 </html>
