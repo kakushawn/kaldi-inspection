@@ -3,8 +3,4 @@ STATIC_FOLDER = ROOT_FOLDER + '/static/'
 UPLOAD_FOLDER = ROOT_FOLDER + '/static/uploads'
 
 # kaldi
-RUN_FOLDER = '/home/kaldi/foxconn-asr/decode_demo'
-DEMO_FOLDER = '/home/kaldi/foxconn-asr/decode_demo/local/demo'
-DECODES_FOLDER = '/Users/shawnkaku/repositories/mirlab/foxconn/demo-web/kaldi/decodes/'
-DATA_FOLDER = '../kaldi/data/'
-CORPUS_FOLDER = '/mnt/hdd18.2t/dataset'
+DECODES_FOLDER = ROOT_FOLDER + '/kaldi/decodes/'
