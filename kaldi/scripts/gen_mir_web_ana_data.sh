@@ -17,7 +17,7 @@ fi
 
 steps/get_ctm_fast.sh $frame_shift --print-silence true $data $graph $decode_dir $decode_dir/ctm
 
-python local/word_ctm_to_mir_schema.py $data $decode_dir/ctm/ctm $decode_dir/mir
+python word_ctm_to_mir_schema.py $data $decode_dir/ctm/ctm $decode_dir/mir
 
 rm -rf $decode_dir/data
 mkdir $decode_dir/data
