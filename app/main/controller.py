@@ -31,7 +31,7 @@ def fetchList():
             content=None
         )
     content = kaldi.fetchPerUtt(param)
-    if content is None:
+    if not content:
         success = False
         message = "decode id or data does not exist"
     else:

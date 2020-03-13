@@ -41,7 +41,7 @@ def fetchPerUtt(param):
         scoring_dir = app.config['DECODES_FOLDER'] + "/" + decode_dir + \
             '/scoring_kaldi/'
 
-        if os.path.exists(scoring_dir + param['criterion'] + '_details'):
+        if not os.path.exists(scoring_dir + param['criterion'] + '_details'):
             return {}
         per_utt = scoring_dir + param['criterion'] + '_details' + '/per_utt'
 
@@ -73,7 +73,7 @@ def fetchPerUtt(param):
         content['wer'] = tokens[1]
 
     else:
-        return None
+        return {}
 
     return content
 

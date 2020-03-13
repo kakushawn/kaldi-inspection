@@ -49,7 +49,7 @@ $('#list-fetch-form').on('submit', function (event) {
       });
     }
     else {
-      $("#listWrapper").prepend("<div> err:" + mir_result.message + " </div>");
+      $("#listWrapper").html("<div> <p> 發生錯誤 </p> </div>");
     }
   });
   return false;
