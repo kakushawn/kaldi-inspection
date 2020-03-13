@@ -7,5 +7,4 @@ def create_app():
     from app.main import main as main_blueprint
     app.register_blueprint(main_blueprint)
     app.static_folder = app.config['STATIC_FOLDER']
-    app.upload_folder = app.config['UPLOAD_FOLDER']
     return app
