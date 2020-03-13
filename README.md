@@ -13,9 +13,6 @@
 5. 執行 `python run.py` 啟動 server，應該可以連到 localhost:5000
 
 
-![Image of List](https://github.com/kakushawn/kaldi-inspection/blob/develop/list-demo.png)
-
-
 ## linking kaldi dependencies
 
 1. 將語料建立軟連結到 static/dataset/ 下。
@@ -50,4 +47,3 @@
 5. 打開首頁，選項應該有剛剛新增的 decode 目錄。若要再新增其他目錄重複步驟 3 到 4 即可。
 
 
-![Image of Ctm](https://github.com/kakushawn/kaldi-inspection/blob/develop/ctm-demo.png)
