@@ -53,7 +53,7 @@ class AudioScoreDrawer {
     }
     this.scoreData = this.getScoreData(this.data);
     this.idSel.find("h4")[0].innerHTML = this.data.Utterance;
-    this.idSel.find("p")[0].innerHTML = this.data.text;
+    this.idSel.find("p")[0].innerHTML = "ref: " + this.data.text;
 
     // Get audio data
     // Support URL
