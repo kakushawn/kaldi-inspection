@@ -6,4 +6,5 @@ __pycache__/
 *.pyc
 
 /static/uploads/
+/static/dataset/*
 /kaldi/decodes/
