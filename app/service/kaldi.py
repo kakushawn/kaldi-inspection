@@ -40,6 +40,9 @@ def fetchPerUtt(param):
     if decode_dir in os.listdir(app.config['DECODES_FOLDER']):
         scoring_dir = app.config['DECODES_FOLDER'] + "/" + decode_dir + \
             '/scoring_kaldi/'
+
+        if os.path.exists(scoring_dir + param['criterion'] + '_details'):
+            return {}
         per_utt = scoring_dir + param['criterion'] + '_details' + '/per_utt'
 
         # read per utt
