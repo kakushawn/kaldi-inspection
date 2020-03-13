@@ -30,7 +30,7 @@ def fetchList():
             message="invalid params",
             content=None
         )
-    content = kaldi.showDecode(param)
+    content = kaldi.fetchPerUtt(param)
     if content is None:
         success = False
         message = "decode id or data does not exist"

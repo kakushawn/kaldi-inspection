@@ -34,7 +34,7 @@ def _getWer(csid):
     return errs/occs
 
 
-def showDecode(param):
+def fetchPerUtt(param):
     content = {'utts': {}}
     decode_dir = param['decode_id']
     if decode_dir in os.listdir(app.config['DECODES_FOLDER']):
