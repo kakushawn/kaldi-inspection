@@ -122,4 +122,6 @@ def fetchCtm(param):
 
 
 def getDecodes():
-    return os.listdir(app.config['DECODES_FOLDER'])
+    return [d for d in os.listdir(app.config['DECODES_FOLDER'])
+            if os.path.islink(app.config['DECODES_FOLDER']+"/"+d)
+            or os.path.isdir(app.config['DECODES_FOLDER']+"/"+d)]
