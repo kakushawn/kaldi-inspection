@@ -5,6 +5,7 @@
 基於 flask framework，把 prebuilt 好的 kaldi recipe （或基於 kaldi standard recipe 建立的 egs），將一個 decode 結果的 ctm （透過 `steps/get_ctm_fast.sh` 取得）render 成 html。
 
 ![Image of demo listing](https://github.com/kakushawn/kaldi-inspection/blob/develop/list-demo.png)
+![Image of demo listing](https://github.com/kakushawn/kaldi-inspection/blob/develop/ctm-demo.png)
 
 
 ## Build steps
