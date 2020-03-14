@@ -1,4 +1,3 @@
-var audioContext;
 var drawer = null;
 
 

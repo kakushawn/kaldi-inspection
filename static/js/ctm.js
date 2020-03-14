@@ -1,4 +1,4 @@
-var audioContext;
+var AudioContext = window.AudioContext || window.webkitAudioContext
 var drawer = null;
 
 window.onload = function init() {
