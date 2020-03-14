@@ -108,8 +108,9 @@ def fetchCtm(param):
         if tokens[0] == param['uttid']:
             audio_file_pos = _getAudioPosInScp(line)
             if audio_file_pos == -1:
+                print("fail here1")
                 return {}
-            wav_tokens = tokens[audio_file_pos].split("/"+corpus+"/")
+            wav_tokens = tokens[audio_file_pos].split(corpus+"/")
             if len(wav_tokens) != 2:
                 return {}
             wav_relative_path = "/static/dataset/" + \
