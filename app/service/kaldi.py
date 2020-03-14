@@ -10,7 +10,7 @@ def _getAudioPosInScp(line0):
         return 1
     # assuming ext naming are  3 chars len :(
     for i, token in enumerate(tokens):
-        if token[-4] == '.':
+        if len(token) > 4 and token[-4] == '.':
             return i
     return -1
 
