@@ -8,8 +8,9 @@ def _getAudioPosInScp(line0):
     tokens = line0.split()
     if len(tokens) == 2:
         return 1
+    # assuming ext naming are  3 chars len :(
     for i, token in enumerate(tokens):
-        if token[-4:] == '.wav':
+        if token[-4] == '.':
             return i
     return -1
 
@@ -102,19 +103,26 @@ def fetchCtm(param):
         return {}
     with open(wavscp) as fp:
         lines = fp.read().splitlines()
+    if len(lines) == 0:
+        return {}
+
+    # find audio position in wav.scp
+    tokens = lines[0].split()
+    audio_file_pos = _getAudioPosInScp(lines[0])
+    if audio_file_pos < 1:
+        return {}
+
+    # find wav of given utt in wav.scp
     wav_relative_path = ""
     for line in lines:
         tokens = line.split()
         if tokens[0] == param['uttid']:
-            audio_file_pos = _getAudioPosInScp(line)
-            if audio_file_pos == -1:
-                print("fail here1")
-                return {}
             wav_tokens = tokens[audio_file_pos].split(corpus+"/")
             if len(wav_tokens) != 2:
                 return {}
             wav_relative_path = "/static/dataset/" + \
                 corpus + "/" + wav_tokens[1]
+
     # utt not found
     if wav_relative_path == "":
         return {}
