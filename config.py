@@ -1,4 +1,4 @@
-ROOT_FOLDER = '/Users/shawnkaku/repositories/mirlab/kaldi-inspection/'
+ROOT_FOLDER = '/home/shawn/repos/kaldi-inspection/'
 STATIC_FOLDER = ROOT_FOLDER + '/static/'
 
 # kaldi

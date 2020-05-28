@@ -15,7 +15,11 @@ if [ -f $decode_dir/../frame_subsampling_factor ]; then
     frame_shift="--frame-shift 0.0$n"
 fi
 
-steps/get_ctm_fast.sh $frame_shift --print-silence true $data $graph $decode_dir $decode_dir/ctm
+lmwt=`cat $decode_dir/scoring_kaldi/wer_details/lmwt`
+wip=`cat $decode_dir/scoring_kaldi/wer_details/wip`
+steps/get_ctm_fast.sh \
+    $frame_shift --print-silence true --lmwt $lmwt --wip $wip \
+    $data $graph $decode_dir $decode_dir/ctm
 
 python word_ctm_to_mir_schema.py $data $decode_dir/ctm/ctm $decode_dir/mir
 
