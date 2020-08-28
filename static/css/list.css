@@ -10,3 +10,20 @@
 .list-item {
   padding-bottom:  30px;
 }
+
+.correct {
+  /* color: green; */
+}
+
+.insert {
+  color: blue;
+}
+
+.delete {
+  /* text-decoration: line-through; */
+  color: lightslategrey;
+}
+
+.substitution {
+  color: red;
+}
