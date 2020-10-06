@@ -41,14 +41,15 @@ def fetchPerUtt(param):
     if decode_dir in os.listdir(app.config['DECODES_FOLDER']):
         scoring_dir = app.config['DECODES_FOLDER'] + "/" + decode_dir + \
             '/scoring_kaldi/'
-
+        
+        print( scoring_dir + param['criterion'] + '_details' )
         if not os.path.exists(scoring_dir + param['criterion'] + '_details'):
             return {}
         per_utt = scoring_dir + param['criterion'] + '_details' + '/per_utt'
 
         # read per utt
         count = 0
-        with open(per_utt) as fp:
+        with open(per_utt, "r", encoding="utf-8") as fp:
             lines = fp.read().splitlines()
         for line in lines:
             tokens = line.split()
@@ -68,7 +69,7 @@ def fetchPerUtt(param):
         wer_file = scoring_dir + "/best_" + param['criterion'].lower()
         if not os.path.exists(wer_file):
             return {}
-        with open(wer_file) as fp:
+        with open(wer_file, "r", encoding="utf-8") as fp:
             lines = fp.read().splitlines()
         tokens = lines[0].split()
         content['wer'] = tokens[1]
@@ -87,12 +88,12 @@ def fetchCtm(param):
     mir_ctm_file = decode_dir + "/mir/"+param['uttid']+'.json'
     if not os.path.exists(mir_ctm_file):
         return {}
-    with open(mir_ctm_file, encoding="utf8") as fp:
+    with open(mir_ctm_file , "r", encoding="utf-8") as fp:
         ctm = json.load(fp)
 
     # get corpus name
     corpus_file = decode_dir+"/corpus"
-    with open(corpus_file) as fp:
+    with open(corpus_file, "r", encoding="utf-8") as fp:
         lines = fp.read().splitlines()
     if len(lines) != 1:
         return {}
@@ -102,7 +103,7 @@ def fetchCtm(param):
     wavscp = decode_dir + "/data/wav.scp"
     if not os.path.exists(wavscp):
         return {}
-    with open(wavscp) as fp:
+    with open(wavscp, "r", encoding="utf-8") as fp:
         lines = fp.read().splitlines()
     if len(lines) == 0:
         return {}
@@ -117,7 +118,7 @@ def fetchCtm(param):
     segments = decode_dir + "/data/segments"
     segmentsTimes = None
     if os.path.exists( segments ):
-        with open( segments ) as fp :
+        with open(segments, "r", encoding="utf-8") as fp :
             for segment in fp.read().splitlines() :
                 tokens = segment.split()
                 if tokens[0] == uttid:
