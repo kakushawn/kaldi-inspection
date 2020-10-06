@@ -82,5 +82,5 @@ def fetchCtm():
     return jsonify(
         success=True,
         message="",
-        content=kaldi.fetchCtm(param)
+        content=content
     )

@@ -28,12 +28,15 @@ window.onload = function init() {
     }).done(data => {
       if (data.success) {
         mir_result = data['content'];
+        ctm = mir_result['ctm'];
+        wavFile = mir_result['audio']['wav'];
+        segments = mir_result['audio']['segments'];
         if (drawer === null) {
-          drawer = new AudioScoreDrawer("resultDiv", mir_result['wav'], mir_result['ctm'], waveColors, scoreColors);
+          drawer = new AudioScoreDrawer("resultDiv", wavFile, ctm, segments, waveColors, scoreColors);
         } else {
-          drawer.setData(mir_result['wav'], mir_result['ctm']);
+          drawer.setData(wavFile, ctm);
         }
-        $(document).attr('title', "CTM (" + mir_result['ctm'].Utterance + ")");
+        $(document).attr('title', "CTM (" + ctm.Utterance + ")");
       }
     });
   }

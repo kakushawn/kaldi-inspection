@@ -80,6 +80,7 @@ def fetchPerUtt(param):
 
 
 def fetchCtm(param):
+    uttid = param["uttid"]
     # get mir ctm
     expdir = app.config['DECODES_FOLDER']
     decode_dir = expdir+"/"+param['decode_id']
@@ -112,11 +113,23 @@ def fetchCtm(param):
     if audio_file_pos < 1:
         return {}
 
+    # get wav id if segments exist
+    segments = decode_dir + "/data/segments"
+    segmentsTimes = None
+    if os.path.exists( segments ):
+        with open( segments ) as fp :
+            for segment in fp.read().splitlines() :
+                tokens = segment.split()
+                if tokens[0] == uttid:
+                    uttid = tokens[1]
+                    segmentsTimes = [tokens[2], tokens[3]]
+                    break;
+
     # find wav of given utt in wav.scp
     wav_relative_path = ""
     for line in lines:
         tokens = line.split()
-        if tokens[0] == param['uttid']:
+        if tokens[0] == uttid:
             wav_tokens = tokens[audio_file_pos].split(corpus+"/")
             if len(wav_tokens) != 2:
                 return {}
@@ -128,8 +141,10 @@ def fetchCtm(param):
         return {}
 
     return {
+        'ctm': ctm,
+        'audio': {'wav': wav_relative_path, 'segments': segmentsTimes},
         'wav': wav_relative_path,
-        'ctm': ctm
+        'segments': segmentsTimes
     }
 
 

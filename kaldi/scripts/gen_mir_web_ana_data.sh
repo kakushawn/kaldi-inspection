@@ -28,5 +28,8 @@ mkdir $decode_dir/data
 for f in wav.scp text utt2spk; do
     cp $data/$f $decode_dir/data
 done
+if [ -f $data/segments ]; then
+    cp $data/segments $decode_dir/data/segments
+fi
 
 echo $corpus > $decode_dir/corpus
