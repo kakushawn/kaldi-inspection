@@ -44,7 +44,7 @@ def fetchPerUtt(param):
         
         print( scoring_dir + param['criterion'] + '_details' )
         if not os.path.exists(scoring_dir + param['criterion'] + '_details'):
-            return {}
+            return {"error": "criterion details not exist!"}
         per_utt = scoring_dir + param['criterion'] + '_details' + '/per_utt'
 
         # read per utt
@@ -68,14 +68,14 @@ def fetchPerUtt(param):
         # read overall wer
         wer_file = scoring_dir + "/best_" + param['criterion'].lower()
         if not os.path.exists(wer_file):
-            return {}
+            return {"error": "wer file not exist!"}
         with open(wer_file, "r", encoding="utf-8") as fp:
             lines = fp.read().splitlines()
         tokens = lines[0].split()
         content['wer'] = tokens[1]
 
     else:
-        return {}
+        return {"error": "decode_dir not exist!"}
 
     return content
 
@@ -87,7 +87,7 @@ def fetchCtm(param):
     decode_dir = expdir+"/"+param['decode_id']
     mir_ctm_file = decode_dir + "/mir/"+param['uttid']+'.json'
     if not os.path.exists(mir_ctm_file):
-        return {}
+        return {"error": "ctm json file not exist!"}
     with open(mir_ctm_file , "r", encoding="utf-8") as fp:
         ctm = json.load(fp)
 
@@ -96,23 +96,23 @@ def fetchCtm(param):
     with open(corpus_file, "r", encoding="utf-8") as fp:
         lines = fp.read().splitlines()
     if len(lines) != 1:
-        return {}
+        return {"error": "corpus file no data!"}
     corpus = lines[0]
 
     # get wav path
     wavscp = decode_dir + "/data/wav.scp"
     if not os.path.exists(wavscp):
-        return {}
+        return {"error": "data wav.scp not exist!"}
     with open(wavscp, "r", encoding="utf-8") as fp:
         lines = fp.read().splitlines()
     if len(lines) == 0:
-        return {}
+        return {'error': "read wav.scp error!"}
 
     # find audio position in wav.scp
     tokens = lines[0].split()
     audio_file_pos = _getAudioPosInScp(lines[0])
     if audio_file_pos < 1:
-        return {}
+        return {'erroe':"audio_file_pos < 1!"}
 
     # get wav id if segments exist
     segments = decode_dir + "/data/segments"
@@ -133,13 +133,13 @@ def fetchCtm(param):
         if tokens[0] == uttid:
             wav_tokens = tokens[audio_file_pos].split(corpus+"/")
             if len(wav_tokens) != 2:
-                return {}
+                return {'error':"wav token error!!! Corpus: "+corpus+", File_pos: "+str(audio_file_pos)+", Wav_tokens: ["+",".join(tokens)+"]"}
             wav_relative_path = "/static/dataset/" + \
                 corpus + "/" + wav_tokens[1]
 
     # utt not found
     if wav_relative_path == "":
-        return {}
+        return {'error':"utt not found in wav.scp! uttid: "+uttid}
 
     return {
         'ctm': ctm,

@@ -28,13 +28,17 @@ window.onload = function init() {
     }).done(data => {
       if (data.success) {
         mir_result = data['content'];
+        if (mir_result['error'] != null){
+          $("#resultDiv").html( mir_result['error'] );
+          return ;
+        }
         ctm = mir_result['ctm'];
         wavFile = mir_result['audio']['wav'];
         segments = mir_result['audio']['segments'];
         if (drawer === null) {
           drawer = new AudioScoreDrawer("resultDiv", wavFile, ctm, segments, waveColors, scoreColors);
         } else {
-          drawer.setData(wavFile, ctm);
+          drawer.setData(wavFile, ctm, segments);
         }
         $(document).attr('title', "CTM (" + ctm.Utterance + ")");
       }
