@@ -16,7 +16,7 @@ class AudioScoreDrawer {
     // Setting
     this.silenceColor = "#FFFFFF";
     // top, right, bottom, left
-    this.paddings = [30, 20, 20, 20];
+    this.paddings = [50, 20, 50, 20];
     this.scorePhoneBlockLineWidth = 1;
     this.clickedRegionLineWidth = 8;
     this.clickedRegionColor = "#0A1747";
@@ -109,11 +109,11 @@ class AudioScoreDrawer {
 
     this.waveBaseX = this.paddings[3];
     this.waveMidY = this.paddings[0] + (this.scoreBlkLength) / 2;
-    this.waveSecTextBaseY = this.height - this.paddings[2] / 4;
+    this.waveSecTextBaseY = this.height - this.paddings[2] * 2 / 3;
 
     this.scoreBaseX = this.paddings[3];
     this.scoreBaseY = this.paddings[0];
-    this.scoreWordNameBaseY = this.paddings[0] * 1 / 4;
+    this.scoreWordNameBaseY = this.paddings[0] * 2 / 3;
     this.scoreWordScoreBaseY = this.paddings[0] * 3 / 4;
     this.scorePhoneNameBaseY = this.scoreBaseY + this.scoreBlkLength - this.paddings[0] * 1 / 4;
     this.scorePhoneScoreBaseY = this.scoreBaseY + this.scoreBlkLength - this.paddings[0] * 3 / 4;
@@ -395,7 +395,8 @@ class AudioScoreDrawer {
     this.ctx.restore();
 
     // Label time
-    for (let sec = 1; sec < this.duration; sec++) {
+    this.ctx.font = "14px sans-serif";
+    for (let sec = 0; sec < this.duration; sec++) {
       let textWidth = this.ctx.measureText(sec).width;
       let x = this.waveBaseX + sec * this.sampleRate * this.xUnitLength - textWidth / 2;
       this.ctx.fillText(sec, x, this.waveSecTextBaseY);
@@ -432,6 +433,7 @@ class AudioScoreDrawer {
       // Name of word
       text = `${word.text}`
       // (${word.name})`;
+      this.ctx.font = "14px sans-serif";
       textWidth = this.ctx.measureText(text).width;
       textX = blkX + blkWidth / 2 - textWidth / 2;
       this.ctx.fillText(text, textX, this.scoreWordNameBaseY);
