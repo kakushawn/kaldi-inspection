@@ -32,12 +32,11 @@ class AudioScoreDrawer {
 
     this.targetSel = this.idSel.find("canvas").eq(0)[0];
     this.ctx = this.targetSel.getContext("2d");
-    console.log( this.ctx.font );
-    console.log( this.ctx.measureText("生产达成").width );
     this.interactionSel = this.idSel.find("canvas").eq(1)[0];
     this.ctxInteraction = this.interactionSel.getContext("2d");
 
     // Player
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
     this.audioCtx = new AudioContext();
 
     // Interaction
@@ -73,28 +72,13 @@ class AudioScoreDrawer {
   initialInfo() {
 
     // Get and compute necessary information
-    if( this.segments != null ){
-      this.beginTime = parseFloat(this.segments[0]).toFixed(3);
-      this.endTime = parseFloat(this.segments[1]).toFixed(3);
-      this.duration = (this.endTime - this.beginTime).toFixed(3);
-    } else {
-      this.beginTime = 0;
-      this.endTime = this.audioData.duration;
-      this.duration = this.audioData.duration;
-    }
-    
-    this.sampleRate = this.audioData.sampleRate;
-    this.sampleAmount = this.duration * this.sampleRate //this.channelData[0].length;
-    // this.duration = this.audioData.duration;
-    
     this.channelData = [];
-    let beginPoint = this.beginTime * this.sampleRate;
-    let endPoint = this.endTime * this.sampleRate;
     for (let i = 0; i < this.audioData.numberOfChannels; i++) {
-      let channelData = this.audioData.getChannelData(i);
-      let segmentsData = channelData.slice( beginPoint , endPoint );
-      this.channelData.push(segmentsData);
+      this.channelData.push(this.audioData.getChannelData(i));
     }
+    this.sampleRate = this.audioData.sampleRate;
+    this.sampleAmount = this.channelData[0].length;
+    this.duration = this.audioData.duration;
 
     let waveMinMax = this.findMinMaxChannelData();
     this.waveMaxAbsValue = Math.max(Math.abs(waveMinMax[0]), Math.abs(waveMinMax[1]));
@@ -411,7 +395,7 @@ class AudioScoreDrawer {
     this.ctx.restore();
 
     // Label time
-    for (let sec = 0; sec < this.duration; sec++) {
+    for (let sec = 1; sec < this.duration; sec++) {
       let textWidth = this.ctx.measureText(sec).width;
       let x = this.waveBaseX + sec * this.sampleRate * this.xUnitLength - textWidth / 2;
       this.ctx.fillText(sec, x, this.waveSecTextBaseY);
@@ -589,11 +573,67 @@ class AudioScoreDrawer {
 
     let audioCtx = new AudioContext();
     audioCtx.decodeAudioData(data, audioData => {
-      this.audioData = audioData;
-      callback();
+      this.audioBufferSlice(audioData, callback);
+      // this.audioData = audioData;
+      // callback();
     }, error => {
       console.log(`Error with decoding audio data ${error.err}`);
     });
+  }
+
+  audioBufferSlice(buffer, callback) {
+    /** ref.: https://miguelmota.com/bytes/slice-audiobuffer/ , https://stackoverflow.com/questions/50191365/how-to-slice-an-audio-blob-at-a-specific-time **/
+    let error = null;
+
+    let duration = buffer.duration;
+    let channels = buffer.numberOfChannels;
+    let sampleRate = buffer.sampleRate;
+
+    // slice by segments
+    if( this.segments != null ){
+      let beginTime = parseFloat(this.segments[0]).toFixed(3);
+      let endTime = parseFloat(this.segments[1]).toFixed(3);
+
+      if (beginTime < 0) {
+        error = new RangeError('begin time must be greater than 0');
+      }
+      if (endTime > duration) {
+        error = new RangeError('end time must be less than or equal to ' + duration);
+      }
+      if (typeof callback !== 'function') {
+        error = new TypeError('callback must be a function');
+      }
+
+      let startOffset = sampleRate * beginTime;
+      let endOffset = sampleRate * endTime;
+      let frameCount = endOffset - startOffset;
+      let newArrayBuffer;
+
+      try {
+        let audioCtx = new AudioContext();
+        newArrayBuffer = audioCtx.createBuffer(channels, endOffset - startOffset, sampleRate);
+        let tmpBuffer = new Float32Array(frameCount);
+        let offset = 0;
+
+        for (let channel = 0; channel < channels; channel++) {
+          buffer.copyFromChannel(tmpBuffer, channel, startOffset);
+          newArrayBuffer.copyToChannel(tmpBuffer, channel, offset);
+        }
+      } catch(e) {
+        error = e;
+      }
+      if (error) {
+        console.error(error);
+      } else {
+        buffer = null;
+        this.audioData = newArrayBuffer;
+      }
+    } else {
+      this.audioData = buffer;
+    }
+    this.beginTime = 0;
+    this.endTime = this.audioData.duration;
+    callback();
   }
 
   setData(audioData, data, audioSegments) {
