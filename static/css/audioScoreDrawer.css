@@ -4,11 +4,16 @@
   width: 100%;
 }
 
-.audioScoreDrawer > .audioScoreDrawer_result, .audioScoreDrawer > .audioScoreDrawer_clickedResult {
+.audioScoreDrawer > .canvas_area {
+  overflow: auto;
+  position: relative;
+  height: 615px;
+}
+
+.audioScoreDrawer > .canvas_area > .audioScoreDrawer_result, .audioScoreDrawer > .canvas_area > .audioScoreDrawer_clickedResult {
   width: 100%;
   height: 550px;
   position: absolute;
-  top: 200px;
+  top: 20px;
   left: 0px;
-  margin-bottom: 20px;
 }

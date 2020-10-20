@@ -20,15 +20,19 @@ class AudioScoreDrawer {
     this.scorePhoneBlockLineWidth = 1;
     this.clickedRegionLineWidth = 8;
     this.clickedRegionColor = "#0A1747";
+    // canvas overflow limit
+    this.overflowPoint = 10 ;
 
     // Create canvas for drawing and intersection
     this.idSel = $(`#${this.id}`);
     this.idSel.addClass("audioScoreDrawer");
-    this.idSel.append("<div class=\"audioScoreDrawer_utt\"> <h4 id=\"uttid\">uttid</h4> </div>");
-    this.idSel.append("<div class=\"audioScoreDrawer_title\"> <p id=\"text\">text</p> </div>");
+    this.idSel.append("<div class=\"audioScoreDrawer_utt\"> <h4 id=\"uttid\">" + this.data.Utterance + "</h4> </div>");
+    this.idSel.append("<div class=\"audioScoreDrawer_title\"> <p id=\"text\">ref: " + this.data.text + "</p> </div>");
     this.idSel.append("<audio controls><source src=" + audioData + "></audio>");
-    this.idSel.append("<canvas class=\"audioScoreDrawer_result\"></canvas>");
-    this.idSel.append("<canvas class=\"audioScoreDrawer_clickedResult\"></canvas>");
+    this.idSel.append("<div class=\"canvas_area\"></div>");
+    this.canvas_area = $('.canvas_area');
+    this.canvas_area.append("<canvas class=\"audioScoreDrawer_result\"></canvas>");
+    this.canvas_area.append("<canvas class=\"audioScoreDrawer_clickedResult\"></canvas>");
 
     this.targetSel = this.idSel.find("canvas").eq(0)[0];
     this.ctx = this.targetSel.getContext("2d");
@@ -54,8 +58,6 @@ class AudioScoreDrawer {
       this.data = this.getDataFromUrl(this.dataUrl);
     }
     this.scoreData = this.getScoreData(this.data);
-    this.idSel.find("h4")[0].innerHTML = this.data.Utterance;
-    this.idSel.find("p")[0].innerHTML = "ref: " + this.data.text;
 
     // Get audio data
     // Support URL
@@ -98,13 +100,22 @@ class AudioScoreDrawer {
 
     this.draw();
     $(window).resize(() => {
-      this.draw();
+      // only resize with non-overflow canvas
+      if( this.duration <= this.overflowPoint ){
+        this.draw();
+      }
     });
   }
 
   setInfo() {
     this.height = this.targetSel.scrollHeight;
     this.width = this.targetSel.scrollWidth;
+    if( this.duration > this.overflowPoint ){
+        // let canvas overflow if audio is too long
+        this.width = 2000; // 2000px
+        this.targetSel.setAttribute("style","width: 2000px");
+        this.interactionSel.setAttribute("style","width: 2000px");
+    }
     this.scoreBlkLength = this.height - this.paddings[0] - this.paddings[2];
 
     this.waveBaseX = this.paddings[3];
@@ -158,7 +169,10 @@ class AudioScoreDrawer {
       },
       isDrag: false
     };
-
+    // for scrollbar
+    let scrollX = 0 ;
+    let clickedPosX = 0 ;
+    
     if (!this.isInteractionEventSet) {
 
       this.interactionSel.addEventListener("mousedown", e => {
@@ -168,15 +182,16 @@ class AudioScoreDrawer {
 
         interaction.start.x = e.clientX - this.canvasInteractionPos.x;
         interaction.start.y = e.clientY - this.canvasInteractionPos.y;
-
+        
       });
       this.interactionSel.addEventListener("mousemove", e => {
         this.canvasInteractionPos = this.interactionSel.getBoundingClientRect();
-
+        
         interaction.end.x = e.clientX - this.canvasInteractionPos.x;
         interaction.end.y = e.clientY - this.canvasInteractionPos.y;
 
         if (interaction.isDrag) {
+          // canvas click event
           let resionStart = null, regionEnd = null;
           let start = {
             pos: interaction.start,
@@ -218,6 +233,25 @@ class AudioScoreDrawer {
             'y2': start.region.y2
           }
           this.drawClickedRegion();
+          
+          // scroll move event
+          
+          if( this.duration > this.overflowPoint ) {
+            let divWidth = this.canvas_area.outerWidth(true) ;  // the mousemove available area
+            // let scrollWidth = this.canvas_area[0].scrollWidth ;  // the scroll bar length
+            // let wDiff = (scrollWidth / divWidth) - 1 ; // widths difference ratio
+            let posX = e.pageX - this.canvas_area.offset().left ; // mouse relative position at the screen
+            
+            if( posX > divWidth * 4/5 ){
+              let edgeX = this.idSel.width() * 4 / 5 ;
+              let moveX = e.offsetX - edgeX ;
+              this.canvas_area.scrollLeft( moveX ) ;
+            } else if( posX < divWidth * 1/5 ) {
+              let edgeX = this.idSel.width() * 1 / 5 ;
+              let moveX = e.offsetX - edgeX ;
+              this.canvas_area.scrollLeft( moveX ) ;
+            } 
+          }
         }
       });
       this.interactionSel.addEventListener("mouseup", e => {
@@ -644,4 +678,5 @@ class AudioScoreDrawer {
     this.segments = audioSegments;
     this.initial();
   }
+
 }
