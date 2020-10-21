@@ -19,20 +19,18 @@ class AudioScoreDrawer {
     this.paddings = [50, 20, 50, 20];
     this.scorePhoneBlockLineWidth = 1;
     this.clickedRegionLineWidth = 8;
-    this.clickedRegionColor = "#0A1747";
+    this.clickedRegionColor = "#46ECC8";
     // canvas overflow limit
     this.overflowPoint = 10 ;
 
     // Create canvas for drawing and intersection
     this.idSel = $(`#${this.id}`);
     this.idSel.addClass("audioScoreDrawer");
-    this.idSel.append("<div class=\"audioScoreDrawer_utt\"> <h4 id=\"uttid\">" + this.data.Utterance + "</h4> </div>");
-    this.idSel.append("<div class=\"audioScoreDrawer_title\"> <p id=\"text\">ref: " + this.data.text + "</p> </div>");
-    this.idSel.append("<audio controls><source src=" + audioData + "></audio>");
-    this.idSel.append("<div class=\"canvas_area\"></div>");
-    this.canvas_area = $('.canvas_area');
-    this.canvas_area.append("<canvas class=\"audioScoreDrawer_result\"></canvas>");
-    this.canvas_area.append("<canvas class=\"audioScoreDrawer_clickedResult\"></canvas>");
+    let drawerHTML = "<div class=\"audioScoreDrawer_utt\"> <h4 id=\"uttid\">" + this.data.Utterance + "</h4> </div>" ;
+    drawerHTML += "<div class=\"audioScoreDrawer_title\"> <p id=\"text\">ref: " + this.data.text + "</p> </div>" ;
+    drawerHTML += "<audio controls><source src=" + audioData + "></audio>" ;
+    drawerHTML += "<div class=\"canvas_area\"> <canvas class=\"audioScoreDrawer_result\"></canvas> <canvas class=\"audioScoreDrawer_clickedResult\"></canvas> </div>" ;
+    this.idSel.append( drawerHTML ) ;
 
     this.targetSel = this.idSel.find("canvas").eq(0)[0];
     this.ctx = this.targetSel.getContext("2d");

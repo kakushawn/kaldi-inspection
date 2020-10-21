@@ -1,29 +1,27 @@
-var drawer = null;
-
-
 Number.prototype.round = function (places) {
   return +(Math.round(this + "e+" + places) + "e-" + places);
 }
 
+// update by adler 20.10.2020
+// sort data by wer order by desc.
 function getSortedObjectKeys(o) {
-  arr = [];
+  let arr = [];
   for (let key in o) {
     arr.push({ 'utt': key, 'wer': o[key].wer.round(4) });
   }
-
-  return arr.sort(function (a, b) { return a.wer - b.wer; }).map(function (o) { return o.utt; });
+  // If two elements have different number, then the one who has larger number wins
+  return arr.sort(function (a, b) { return b.wer - a.wer; }).map(function (o) { return o.utt; });
 }
-
-window.onload = function init() {
-};
 
 $('#list-fetch-form').on('submit', function (event) {
   event.preventDefault();
-  var data = $('#list-fetch-form :input').serializeArray();
-  var decode_options = data.find(function (element) {
+  $("#listInfo").html("");
+  $("#listWrapper").html("Loading...");
+  let data = $('#list-fetch-form :input').serializeArray();
+  let decode_options = data.find(function (element) {
     return element["name"] == 'decode-options'
   });
-  var criterion = data.find(function (element) { return element["name"] == 'criterion' }).value;
+  let criterion = data.find(function (element) { return element["name"] == 'criterion' }).value;
 
   if (decode_options) {
     let decode_id = decode_options.value;
@@ -36,10 +34,9 @@ $('#list-fetch-form').on('submit', function (event) {
       },
     }).done(data => {
       if (data.success) {
-        $("#listInfo").html("");
-        $("#listInfo").prepend("<h3> result of " + decode_id + " (overall WER: " + data.content.wer + ")</h4>");
+        $("#listInfo").html("<h3> result of " + decode_id + " (overall WER: " + data.content.wer + ")</h4>");
         $("#listWrapper").html("");
-        listResult( data )
+        listResult( data );
       }
       else {
         $("#listWrapper").html("<div> <p> 發生錯誤 </p> </div>");
@@ -49,54 +46,60 @@ $('#list-fetch-form').on('submit', function (event) {
   }
 });
 
-// added by adler 28.08.2020
-// check csid and give difference class
-function csidClass( csid ){
-  let colorClassList = [] ;
-  csid.forEach( item => {
-    switch( item.toLowerCase() ){
+// update by adler 20.10.2020
+// check csid and give difference class , return the HTML code of ops/ref/hyp
+function csidClasses( uttData ){
+  let opsHTML = "" , refHTML = "" , hypHTML = "" ;
+  let csidClass = "" ;
+  for( let i = 0 ; i < uttData.op.length ; i ++ ){
+    let ops = uttData.op[i] ;
+    let ref = uttData.ref[i] ;
+    let hyp = uttData.hyp[i] ;
+    switch( ops.toLowerCase() ){
       case 'c' :
-        colorClassList.push("correct") ;
+        csidClass = "correct" ;
         break ;
       case 's' :
-        colorClassList.push("substitution") ;
+        csidClass = "substitution" ;
         break ;
       case 'i' :
-        colorClassList.push("insert") ;
+        csidClass = "insert" ;
         break;
       case 'd' :
-        colorClassList.push("delete") ;
+        csidClass = "delete" ;
         break ;
       default :
-        colorClassList.push("") ;
+        csidClass = "" ;
         break ;
     }
-  }) ;
-  return colorClassList ;
+    opsHTML += "<span class=\"" + csidClass + "\">" + ops + "</span> " ;
+    refHTML += "<span class=\"" + csidClass + "\">" + ref + "</span> " ;
+    hypHTML += "<span class=\"" + csidClass + "\">" + hyp + "</span> " ;
+  }
+  return [opsHTML, refHTML, hypHTML] ;
 }
 
 
-// added by adler 28.08.2020
-// list all uttrence ctm result
+// update by adler 20.10.2020
+// list all uttrence ctm result in div#listWrapper
 function listResult( data ) {
-  utts = data.content.utts
+  let utts = data.content.utts ;
   utts = getSortedObjectKeys(utts);
+
+  let listWrapperHTML = "" ;
   utts.forEach(key => {
     // set all display row
-    $("#listWrapper").prepend("<div class=list-item id=\"" + key + "\"></div>");
-    $("#" + key).append("<h5><a href=\"" + data.content.utts[key].ctm_link + "\" target=\"_blank\"> " + key + " </a></h5>");
-    $("#" + key).append("<h5>csid: </h5> <p>" + data.content.utts[key].csid + "</p>")
-    $("#" + key).append("<h5>ops: </h5> <p id=\"ops\"></p>")
-    $("#" + key).append("<h5>wer: </h5> <p>" + data.content.utts[key].wer.round(4) + "</p>")
-    $("#" + key).append("<h5>ref: <h5/> <p id=\"ref\"></p>");
-    $("#" + key).append("<h5>hyp: <h5/> <p id=\"hyp\"></p>");
+    let orhHTMLList = csidClasses( data.content.utts[key] ) ;  // get ops/ref/hyp HTML with csid classes
+    let opsHTML = orhHTMLList[0] , refHTML = orhHTMLList[1] , hypHTML = orhHTMLList[2] ;
 
-    // list result with difference color
-    let csidClassList = csidClass( data.content.utts[key].op ) ;
-    for( let i = 0 ; i < csidClassList.length ; i ++ ){
-      $("#ops").append("<span class=\"" + csidClassList[i] + "\">" + data.content.utts[key].op[i] + "</span> ")
-      $("#ref").append("<span class=\"" + csidClassList[i] + "\">" + data.content.utts[key].ref[i] + "</span> ")
-      $("#hyp").append("<span class=\"" + csidClassList[i] + "\">" + data.content.utts[key].hyp[i] + "</span> ")
-    }
+    keyHTML = "<h5><a href=\"" + data.content.utts[key].ctm_link + "\" target=\"_blank\"> " + key + " </a></h5>" ;
+    keyHTML += "<h5>csid: </h5> <p>" + data.content.utts[key].csid + "</p>" ;
+    keyHTML += "<h5>ops: </h5> <p id=\"ops\">" + opsHTML + "</p>" ;
+    keyHTML += "<h5>wer: </h5> <p>" + data.content.utts[key].wer.round(4) + "</p>" ;
+    keyHTML += "<h5>ref: </h5> <p id=\"ref\">" + refHTML + "</p>" ;
+    keyHTML += "<h5>hyp: </h5> <p id=\"hyp\">" + hypHTML + "</p>" ;
+
+    listWrapperHTML += "<div class=list-item id=\"" + key + "\">" + keyHTML + "</div>" ;
   });
+  $("#listWrapper").html( listWrapperHTML ) ;
 }
