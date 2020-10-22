@@ -32,6 +32,7 @@ class AudioScoreDrawer {
     drawerHTML += "<div class=\"canvas_area\"> <canvas class=\"audioScoreDrawer_result\"></canvas> <canvas class=\"audioScoreDrawer_clickedResult\"></canvas> </div>" ;
     this.idSel.append( drawerHTML ) ;
 
+    this.canvas_area = this.idSel.find(".canvas_area");
     this.targetSel = this.idSel.find("canvas").eq(0)[0];
     this.ctx = this.targetSel.getContext("2d");
     this.interactionSel = this.idSel.find("canvas").eq(1)[0];
