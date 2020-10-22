@@ -28,7 +28,7 @@ class AudioScoreDrawer {
     this.idSel.addClass("audioScoreDrawer");
     let drawerHTML = "<div class=\"audioScoreDrawer_utt\"> <h4 id=\"uttid\">" + this.data.Utterance + "</h4> </div>" ;
     drawerHTML += "<div class=\"audioScoreDrawer_title\"> <p id=\"text\">ref: " + this.data.text + "</p> </div>" ;
-    drawerHTML += "<audio controls><source src=" + audioData + "></audio>" ;
+    drawerHTML += makeAudioPlayerHtml(this.data.Utterance) ;
     drawerHTML += "<div class=\"canvas_area\"> <canvas class=\"audioScoreDrawer_result\"></canvas> <canvas class=\"audioScoreDrawer_clickedResult\"></canvas> </div>" ;
     this.idSel.append( drawerHTML ) ;
 
@@ -37,7 +37,7 @@ class AudioScoreDrawer {
     this.interactionSel = this.idSel.find("canvas").eq(1)[0];
     this.ctxInteraction = this.interactionSel.getContext("2d");
 
-    // Player
+    // canvas player
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     this.audioCtx = new AudioContext();
 
@@ -92,6 +92,11 @@ class AudioScoreDrawer {
         this.phonesInternal.push(phone.interval);
       });
     });
+
+    // audio player
+    let waveBlob = bufferToWave( this.audioData ) ;
+    let waveUrl = URL.createObjectURL( waveBlob ) ;
+    this.audioPlayer = new AudioPlayer( waveUrl );
 
     // Add click event
     this.clickEvent();
