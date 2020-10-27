@@ -2,7 +2,7 @@
 // Convert an AudioBuffer to a Blob using WAVE representation
 function bufferToWave( audioBuffer ) {
   var numOfChan = audioBuffer.numberOfChannels,
-      length = audioBuffer.sampleRate * audioBuffer.duration * numOfChan * 2 + 44,
+      length = Math.round( audioBuffer.sampleRate * audioBuffer.duration * numOfChan * 2 + 44 ),
       buffer = new ArrayBuffer(length),
       view = new DataView(buffer),
       channels = [], i, sample,
