@@ -2,7 +2,7 @@ astroid==2.3.3
 autopep8==1.5
 cffi==1.14.0
 Click==7.0
-cryptography==2.8
+cryptography==3.2
 Flask==1.1.1
 hanziconv==0.3.2
 isort==4.3.21
