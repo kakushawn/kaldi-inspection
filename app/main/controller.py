@@ -44,6 +44,27 @@ def fetchList():
     )
 
 
+@main.route('/list/audio', methods=['GET'])
+def fetchAudio():
+    param = _validateDetailParam();
+    if type(param) == str :
+        return jsonify( success=False, message="invalid params", content=None )
+
+    audioInfo = kaldi.fetchAudio(param)
+    if not audioInfo:
+        success = False
+        message = "decode id or data does not exist"
+    else:
+        success = True
+        message = ""
+
+    return jsonify(
+        success=success,
+        message=message,
+        content=audioInfo
+    )
+
+
 @main.route('/ctm/', methods=['GET'])
 def ctm():
     return render_template('ctm/index.html')

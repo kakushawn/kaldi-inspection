@@ -17,14 +17,13 @@ $('#list-fetch-form').on('submit', function (event) {
   event.preventDefault();
   $("#listInfo").html("");
   $("#listWrapper").html("Loading...");
-  let data = $('#list-fetch-form :input').serializeArray();
-  let decode_options = data.find(function (element) {
-    return element["name"] == 'decode-options'
-  });
-  let criterion = data.find(function (element) { return element["name"] == 'criterion' }).value;
+  let input_form = $('#list-fetch-form') ; 
+  let decode_options = input_form.find("select[name=decode-options]") ;
+  let criterion = input_form.find("select[name=criterion]").val() ;
+  let quantity = input_form.find("select[name=quantity]").val() ;
 
   if (decode_options) {
-    let decode_id = decode_options.value;
+    let decode_id = decode_options.val();
     $.ajax({
       url: '/list/fetch',
       method: "GET",
@@ -34,9 +33,9 @@ $('#list-fetch-form').on('submit', function (event) {
       },
     }).done(data => {
       if (data.success) {
-        $("#listInfo").html("<h3> result of " + decode_id + " (overall WER: " + data.content.wer + ")</h4>");
+        $("#listInfo").html("<h3 id=\"decode_id\" name=\"" + decode_id + "\"> result of " + decode_id + " (overall WER: " + data.content.wer + ")</h4>");
         $("#listWrapper").html("");
-        listResult( data );
+        listResult( data , quantity );
       }
       else {
         $("#listWrapper").html("<div> <p> 發生錯誤 </p> </div>");
@@ -80,14 +79,20 @@ function csidClasses( uttData ){
 }
 
 
-// update by adler 20.10.2020
+// update by adler 29.10.2020
 // list all uttrence ctm result in div#listWrapper
-function listResult( data ) {
+function listResult( data , quantity ) {
   let utts = data.content.utts ;
-  utts = getSortedObjectKeys(utts);
+  keys = getSortedObjectKeys(utts);
+  
+  // selected elements by display quantity
+  if( quantity != 'all' ){
+    quantity = parseInt(quantity) ;
+    keys = keys.slice(0, quantity) ;
+  }
 
   let listWrapperHTML = "" ;
-  utts.forEach(key => {
+  keys.forEach(key => {
     // set all display row
     let orhHTMLList = csidClasses( data.content.utts[key] ) ;  // get ops/ref/hyp HTML with csid classes
     let opsHTML = orhHTMLList[0] , refHTML = orhHTMLList[1] , hypHTML = orhHTMLList[2] ;
@@ -98,8 +103,64 @@ function listResult( data ) {
     keyHTML += "<h5>wer: </h5> <p>" + data.content.utts[key].wer.round(4) + "</p>" ;
     keyHTML += "<h5>ref: </h5> <p id=\"ref\">" + refHTML + "</p>" ;
     keyHTML += "<h5>hyp: </h5> <p id=\"hyp\">" + hypHTML + "</p>" ;
+    keyHTML += "<h5>audio: </h5> <div class=\"icono-play audio\" onclick=\"playAudio(this, \'" + key + "\');\"></div>" ;
 
     listWrapperHTML += "<div class=list-item id=\"" + key + "\">" + keyHTML + "</div>" ;
   });
   $("#listWrapper").html( listWrapperHTML ) ;
+}
+
+// create by adler 29.10.2020
+// play uttrence audio 
+function playAudio( click_btn , utt_id ) {
+  // disable click event when audio playing
+  click_btn.style.pointerEvents = "none";
+  
+  // get wav path to play audio
+  let decode_id = $("#listInfo").find("h3#decode_id").attr("name") ;
+  $.ajax({
+    url: '/list/audio',
+    method: "GET",
+    data: {
+      decode_id: decode_id,
+      uttid: utt_id
+    },
+  }).done(data => {
+    if (data.success) {
+      let content = data['content'];
+      let wavFile = content['wav'];
+      let segments = content['segments'];
+      
+      // create a audio object and play
+      let audio = new Audio(wavFile);
+      if( segments ){
+        // play with segments
+        let startTime = segments[0];
+        let endTime = segments[1];
+        let duration = endTime - startTime;
+        
+        audio.currentTime = startTime ;
+        audio.play();
+        // stop & enable click event after duration time out
+        setTimeout(function(){ 
+          audio.pause();
+          click_btn.style.pointerEvents = "";
+        }, duration*1000);
+      } else {
+        // play full
+        audio.play();
+        // enable click event after play
+        audio.addEventListener("pause", function() {
+            click_btn.style.pointerEvents = "";
+          }
+        );
+      }
+    }
+    else {
+      // print error message
+      click_btn.setAttribute("class","");
+      click_btn.innerHTML = "<p>" + data['message'] + "</p>"
+    }
+  });
+  
 }
